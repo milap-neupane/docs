@@ -1,7 +1,7 @@
 {
   "generator-openapi-repo": {
     "importExistingSpec": true,
-    "importedSpec": "calendar_api.yml",
+    "importedSpec": "spec/paths/pets.yml",
     "name": "calendar",
     "redocVersion": "latest",
     "repo": "milap-neupane/docs",

@@ -1,4 +1,3 @@
- Pets:
-    type: array
-    items:
-      $ref: '#/definitions/Pet'
+type: array
+items:
+  $ref: '#/definitions/Pet'
