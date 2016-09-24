@@ -7,6 +7,7 @@ var path = require('path');
 var exec = require('child_process').exec;
 var portfinder = require('portfinder');
 var swaggerRepo = require('swagger-repo');
+var basicAuth = require('basic-auth-connect');
 
 var DIST_DIR = 'web_deploy';
 
@@ -15,10 +16,12 @@ gulp.task('serve', ['build', 'watch', 'edit'], function() {
     gulpConnect.server({
       root: [DIST_DIR],
       livereload: true,
+      auth: 'k:a',
       port: port,
       middleware: function (gulpConnect, opt) {
         return [
-          cors()
+          cors(),
+          basicAuth('cloudfactory', 'kathmandu09')
         ]
       }
     });
@@ -28,6 +31,7 @@ gulp.task('serve', ['build', 'watch', 'edit'], function() {
 gulp.task('edit', function() {
   portfinder.getPort({port: 5000}, function (err, port) {
     var app = connect();
+    app.use(basicAuth('cloudfactory', 'kathmandu09'));
     app.use(swaggerRepo.swaggerEditorMiddleware());
     app.listen(port);
     util.log(util.colors.green('swagger-editor started http://localhost:' + port));
