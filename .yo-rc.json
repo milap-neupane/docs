@@ -1,0 +1,12 @@
+{
+  "generator-openapi-repo": {
+    "importExistingSpec": true,
+    "importedSpec": "calendar_api.yml",
+    "name": "calendar",
+    "redocVersion": "latest",
+    "repo": "milap-neupane/docs",
+    "splitSpec": true,
+    "samples": true,
+    "installSwaggerUI": true
+  }
+}

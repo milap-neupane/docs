@@ -1,0 +1,354 @@
+swagger: '2.0'
+info:
+  version: 'v1'
+  title: Calendar API Documentation
+  description:  |    
+    Documentation for Calender API
+    
+ 
+
+    The following API facillates these features
+  contact:
+    name: Core Services
+    
+  license:
+    name: Sprout
+    url: https://www.cloudfactory.com
+host: calendar.cloudfactory.com
+basePath: /v1
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+  
+
+
+
+
+
+paths:
+  /calendars:
+    get:
+      summary:
+        List user calenders
+      tags: [lists]
+      
+      parameters:
+        - name: owner_type
+          in: query
+          description: Owner attribute
+          required: true
+          type: string
+
+        - name: owner_id
+          in: query
+          description: ID of owner
+          required: true
+          type: string
+          
+  
+              
+              
+      responses:
+        '200':
+          description: Successful
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/lists"
+              
+  
+    post:
+      summary:
+        create calenders
+      
+      parameters:
+        - name: calendar_body
+          in: body
+          required: true
+          schema:
+              $ref: "#/definitions/cbody"
+
+        
+ 
+      responses:
+        '201':
+          description: Created
+          schema:
+              $ref: "#/definitions/cresponse" 
+              
+              
+              
+              
+  /calendars/{id}/event:
+    post:
+      summary:
+        Create an Event
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: id of calender
+          
+        - name: eventbody
+          in: body
+          required: true
+          schema: 
+            $ref: '#/definitions/eventbody'
+          
+        
+              
+      responses:
+        '201':
+          description: Successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/eventresponse'
+              
+              
+  /projects/{calendar_id}/events/{id}:
+    get:
+      summary: 
+        Get an Event
+      parameters:
+        - name: calendar_id
+          in: path
+          required: true
+          description: The id of the calendar in which event was created
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: Id of events
+          type: string
+          
+        
+
+
+
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/geteventresponse'
+             
+  
+
+ 
+ 
+ 
+definitions:
+
+  cbody:
+    type: object
+    properties: 
+      name:
+        type: string
+      description:
+        type: string
+      owner:
+        type: object
+        properties:
+         type:
+          type: string
+         id:
+          type: string
+
+
+  cresponse:
+    type: object
+    properties: 
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      owner:
+        type: object
+        properties:
+          type:
+            type: string
+          id:
+            type: string
+              
+  lists:
+      type: object
+      properties: 
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        primary:
+          type: boolean
+          
+          
+          
+  eventbody:
+      type: object
+      properties: 
+        name:
+          type: string
+        description:
+          type: string
+        start-time:
+          type: string
+          format: date-time
+        end-time:
+           type: string
+           format: date-time
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+            
+        resources:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - id
+            properties:
+        
+              type:
+                type: string
+              id:
+                type: string
+              response_status:
+                type: string
+           
+          
+  eventresponse:
+    type: object
+    properties: 
+      id:
+        type: string
+      created:
+        type: string
+        format: date-time
+      updated:
+        type: string
+        format: date-time
+      name:
+        type: string
+      description:
+        type: string
+      start-time:
+        type: string
+        format: date-time
+      calender_id:
+        type: string
+      custom_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            value:
+              type: string
+
+      resources:
+        type: array
+        items:
+          type: object
+          properties:
+            type: 
+              type: string
+            id:
+              type: string
+
+            response_status:
+              type: string
+
+  geteventresponse:
+       type: object
+       properties:
+          id:
+            type: string
+          created:
+            type: string
+            format: date-time
+          updated:
+            type: string
+            format: date-time
+          name: 
+            type: string
+          description:
+             type: string
+          start:
+            type: string
+            format: date-time
+          end:
+            type: string
+            format: date-time
+
+          creator:
+            type: string
+          calendar_id:
+            type: string
+
+          attributes:
+            type: array
+            items:
+              type: object
+              properties:
+                 name:
+                    type: string
+                 value:
+                    type: string
+
+          resources:
+             type: array
+             items:
+               type: object
+               properties:
+                type:
+                  type: string
+
+                id:
+                  type: string
+
+                response_status:
+                  type: string
+
+          recurrence:
+            type: object
+            properties:
+              frequency:
+                type: string
+
+              interval:
+                type: string
+
+              count:
+                type: string
+
+              until:
+                type: string
+
+              bydate:
+                type: array
+                items:
+                  type: string
+
+
+          original_event_id:
+            type: string    
+               
+               
+               
+               
+ 
