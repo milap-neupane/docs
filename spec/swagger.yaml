@@ -1,354 +1,101 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
-  version: 'v1'
-  title: Calendar API Documentation
-  description:  |    
-    Documentation for Calender API
-    
- 
-
-    The following API facillates these features
-  contact:
-    name: Core Services
-    
+  version: 1.0.0
+  title: Swagger Petstore
   license:
-    name: Sprout
-    url: https://www.cloudfactory.com
-host: calendar.cloudfactory.com
+    name: MIT
+host: petstore.swagger.io
 basePath: /v1
 schemes:
-  - https
+  - http
 consumes:
   - application/json
 produces:
   - application/json
-  
-
-
-
-
-
 paths:
-  /calendars:
+  /pets:
     get:
-      summary:
-        List user calenders
-      tags: [lists]
-      
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
       parameters:
-        - name: owner_type
+        - name: limit
           in: query
-          description: Owner attribute
-          required: true
-          type: string
-
-        - name: owner_id
-          in: query
-          description: ID of owner
-          required: true
-          type: string
-          
-  
-              
-              
+          description: How many items to return at one time (max 100)
+          required: false
+          type: integer
+          format: int32
       responses:
-        '200':
-          description: Successful
+        "200":
+          description: An paged array of pets
+          headers:
+            x-next:
+              type: string
+              description: A link to the next page of responses
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/lists"
-              
-  
+            $ref: '#/definitions/Pets'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     post:
-      summary:
-        create calenders
-      
-      parameters:
-        - name: calendar_body
-          in: body
-          required: true
-          schema:
-              $ref: "#/definitions/cbody"
-
-        
- 
+      summary: Create a pet
+      operationId: createPets
+      tags:
+        - pets
       responses:
-        '201':
-          description: Created
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
           schema:
-              $ref: "#/definitions/cresponse" 
-              
-              
-              
-              
-  /calendars/{id}/event:
-    post:
-      summary:
-        Create an Event
-      parameters:
-        - name: id
-          in: path
-          type: string
-          required: true
-          description: id of calender
-          
-        - name: eventbody
-          in: body
-          required: true
-          schema: 
-            $ref: '#/definitions/eventbody'
-          
-        
-              
-      responses:
-        '201':
-          description: Successful
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/eventresponse'
-              
-              
-  /projects/{calendar_id}/events/{id}:
+            $ref: '#/definitions/Error'
+  /pets/{petId}:
     get:
-      summary: 
-        Get an Event
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - pets
       parameters:
-        - name: calendar_id
+        - name: petId
           in: path
           required: true
-          description: The id of the calendar in which event was created
+          description: The id of the pet to retrieve
           type: string
-        - name: id
-          in: path
-          required: true
-          description: Id of events
-          type: string
-          
-        
-
-
-
       responses:
-        '200':
-          description: OK
+        "200":
+          description: Expected response to a valid request
           schema:
-            $ref: '#/definitions/geteventresponse'
-             
-  
-
- 
- 
- 
+            $ref: '#/definitions/Pets'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
-
-  cbody:
-    type: object
-    properties: 
-      name:
-        type: string
-      description:
-        type: string
-      owner:
-        type: object
-        properties:
-         type:
-          type: string
-         id:
-          type: string
-
-
-  cresponse:
-    type: object
-    properties: 
+  Pet:
+    required:
+      - id
+      - name
+    properties:
       id:
-        type: string
+        type: integer
+        format: int64
       name:
         type: string
-      description:
+      tag:
         type: string
-      owner:
-        type: object
-        properties:
-          type:
-            type: string
-          id:
-            type: string
-              
-  lists:
-      type: object
-      properties: 
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        primary:
-          type: boolean
-          
-          
-          
-  eventbody:
-      type: object
-      properties: 
-        name:
-          type: string
-        description:
-          type: string
-        start-time:
-          type: string
-          format: date-time
-        end-time:
-           type: string
-           format: date-time
-        attributes:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              value:
-                type: string
-            
-        resources:
-          type: array
-          items:
-            type: object
-            required:
-              - type
-              - id
-            properties:
-        
-              type:
-                type: string
-              id:
-                type: string
-              response_status:
-                type: string
-           
-          
-  eventresponse:
-    type: object
-    properties: 
-      id:
+  Pets:
+    type: array
+    items:
+      $ref: '#/definitions/Pet'
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
         type: string
-      created:
-        type: string
-        format: date-time
-      updated:
-        type: string
-        format: date-time
-      name:
-        type: string
-      description:
-        type: string
-      start-time:
-        type: string
-        format: date-time
-      calender_id:
-        type: string
-      custom_attributes:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-            value:
-              type: string
-
-      resources:
-        type: array
-        items:
-          type: object
-          properties:
-            type: 
-              type: string
-            id:
-              type: string
-
-            response_status:
-              type: string
-
-  geteventresponse:
-       type: object
-       properties:
-          id:
-            type: string
-          created:
-            type: string
-            format: date-time
-          updated:
-            type: string
-            format: date-time
-          name: 
-            type: string
-          description:
-             type: string
-          start:
-            type: string
-            format: date-time
-          end:
-            type: string
-            format: date-time
-
-          creator:
-            type: string
-          calendar_id:
-            type: string
-
-          attributes:
-            type: array
-            items:
-              type: object
-              properties:
-                 name:
-                    type: string
-                 value:
-                    type: string
-
-          resources:
-             type: array
-             items:
-               type: object
-               properties:
-                type:
-                  type: string
-
-                id:
-                  type: string
-
-                response_status:
-                  type: string
-
-          recurrence:
-            type: object
-            properties:
-              frequency:
-                type: string
-
-              interval:
-                type: string
-
-              count:
-                type: string
-
-              until:
-                type: string
-
-              bydate:
-                type: array
-                items:
-                  type: string
-
-
-          original_event_id:
-            type: string    
-               
-               
-               
-               
- 
